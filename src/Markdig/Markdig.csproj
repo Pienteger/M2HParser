@@ -14,4 +14,8 @@
     <InternalsVisibleTo Include="Markdig.Tests" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Pienteger.QuranLib" Version="6.0.3" />
+  </ItemGroup>
+
 </Project>

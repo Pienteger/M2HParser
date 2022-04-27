@@ -2,7 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
-using System;
 using Markdig.Extensions.Abbreviations;
 using Markdig.Extensions.AutoIdentifiers;
 using Markdig.Extensions.AutoLinks;
@@ -17,24 +16,26 @@ using Markdig.Extensions.Figures;
 using Markdig.Extensions.Footers;
 using Markdig.Extensions.Footnotes;
 using Markdig.Extensions.GenericAttributes;
+using Markdig.Extensions.Globalization;
 using Markdig.Extensions.Hardlines;
 using Markdig.Extensions.JiraLinks;
 using Markdig.Extensions.ListExtras;
 using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.MediaLinks;
+using Markdig.Extensions.NonAsciiNoEscape;
 using Markdig.Extensions.PragmaLines;
+using Markdig.Extensions.QuranMap;
+using Markdig.Extensions.ReferralLinks;
 using Markdig.Extensions.SelfPipeline;
 using Markdig.Extensions.SmartyPants;
-using Markdig.Extensions.NonAsciiNoEscape;
 using Markdig.Extensions.Tables;
 using Markdig.Extensions.TaskLists;
 using Markdig.Extensions.TextRenderer;
 using Markdig.Extensions.Yaml;
+using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
-using Markdig.Extensions.Globalization;
-using Markdig.Helpers;
-using Markdig.Extensions.ReferralLinks;
+using System;
 
 namespace Markdig
 {
@@ -92,6 +93,7 @@ namespace Markdig
                 .UseTaskLists()
                 .UseDiagrams()
                 .UseAutoLinks()
+                .UseQuranMap()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
@@ -496,7 +498,20 @@ namespace Markdig
             }
             return pipeline;
         }
-
+        /// <summary>
+        /// Automatically creates Qur'an references in the text.
+        /// </summary>
+        /// <param name="pipeline">The pipeline</param>
+        /// <param name="options">Set of required options</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseQuranMap(this MarkdownPipelineBuilder pipeline)
+        {
+            if (!pipeline.Extensions.Contains<QuranMapExtension>())
+            {
+                pipeline.Extensions.Add(new QuranMapExtension());
+            }
+            return pipeline;
+        }
         /// <summary>
         /// Adds support for right-to-left content by adding appropriate html attribtues.
         /// </summary>
@@ -642,6 +657,9 @@ namespace Markdig
                         break;
                     case "globalization":
                         pipeline.UseGlobalization();
+                        break;
+                    case "quranmap":
+                        pipeline.UseQuranMap();
                         break;
                     default:
                         throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));

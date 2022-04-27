@@ -2,11 +2,11 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
+using Markdig.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Markdig.Helpers;
-using Markdig.Syntax;
 
 namespace Markdig.Renderers.Html
 {
@@ -43,10 +43,10 @@ namespace Markdig.Renderers.Html
         /// <param name="name">The css class name.</param>
         public void AddClass(string name)
         {
-            if (name is null) ThrowHelper.ArgumentNullException_name();
-           
-            Classes ??= new (2);// Use half list compare to default capacity (4), as we don't expect lots of classes
-            
+            if (string.IsNullOrWhiteSpace(name)) ThrowHelper.ArgumentNullException_name();
+
+            Classes ??= new List<string>(2);// Use half list compare to default capacity (4), as we don't expect lots of classes
+
             if (!Classes.Contains(name))
             {
                 Classes.Add(name);
@@ -60,10 +60,10 @@ namespace Markdig.Renderers.Html
         /// <param name="value">The value.</param>
         public void AddProperty(string name, string value)
         {
-            if (name is null) ThrowHelper.ArgumentNullException_name();
-          
-            Properties ??= new (2); // Use half list compare to default capacity (4), as we don't expect lots of classes
-            
+            if (string.IsNullOrWhiteSpace(name)) ThrowHelper.ArgumentNullException_name();
+
+            Properties ??= new List<KeyValuePair<string, string?>>(2); // Use half list compare to default capacity (4), as we don't expect lots of classes
+
             Properties.Add(new KeyValuePair<string, string?>(name, value));
         }
 
@@ -74,14 +74,14 @@ namespace Markdig.Renderers.Html
         /// <param name="value">The value.</param>
         public void AddPropertyIfNotExist(string name, object? value)
         {
-            if (name is null) ThrowHelper.ArgumentNullException_name();
+            if (string.IsNullOrWhiteSpace(name)) ThrowHelper.ArgumentNullException_name();
             if (Properties is null)
             {
-                Properties = new (4);
+                Properties = new List<KeyValuePair<string, string?>>(4);
             }
             else
             {
-                for (int i = 0; i < Properties.Count; i++)
+                for (var i = 0; i < Properties.Count; i++)
                 {
                     if (Properties[i].Key.Equals(name, StringComparison.Ordinal))
                     {
@@ -110,7 +110,7 @@ namespace Markdig.Renderers.Html
             }
             if (htmlAttributes.Classes is null)
             {
-                htmlAttributes.Classes = shared ? Classes : Classes != null ? new (Classes) : null;
+                htmlAttributes.Classes = shared ? Classes : Classes != null ? new List<string>(Classes) : null;
             }
             else if (Classes != null)
             {
@@ -119,7 +119,7 @@ namespace Markdig.Renderers.Html
 
             if (htmlAttributes.Properties is null)
             {
-                htmlAttributes.Properties = shared ? Properties : Properties != null ? new (Properties) : null;
+                htmlAttributes.Properties = shared ? Properties : Properties != null ? new List<KeyValuePair<string, string?>>(Properties) : null;
             }
             else if (Properties != null)
             {
@@ -143,7 +143,7 @@ namespace Markdig.Renderers.Html
     /// </summary>
     public static class HtmlAttributesExtensions
     {
-        private static readonly object Key = typeof (HtmlAttributes);
+        private static readonly object Key = typeof(HtmlAttributes);
 
         /// <summary>
         /// Tries the get <see cref="HtmlAttributes"/> stored on a <see cref="MarkdownObject"/>.

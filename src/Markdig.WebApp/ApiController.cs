@@ -20,18 +20,15 @@ namespace Markdig.WebApp
         {
             try
             {
-                if (text == null)
-                {
-                    text = string.Empty;
-                }
+                text ??= string.Empty;
 
                 if (text.Length > 1000)
                 {
-                    text = text.Substring(0, 1000);
+                    text = text[..1000];
                 }
 
-                var pipeline = new MarkdownPipelineBuilder().Configure(extension).Build();
-                var result = Markdown.ToHtml(text, pipeline);
+                MarkdownPipeline pipeline = new MarkdownPipelineBuilder().Configure(extension).Build();
+                string result = Markdown.ToHtml(text, pipeline);
 
                 return new {name = "markdig", html = result, version = Markdown.Version};
             }

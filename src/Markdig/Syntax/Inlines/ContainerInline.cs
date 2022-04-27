@@ -2,12 +2,12 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using Markdig.Helpers;
 
 namespace Markdig.Syntax.Inlines
 {
@@ -42,7 +42,7 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public void Clear()
         {
-            var child = LastChild;
+            Inline? child = LastChild;
             while (child != null)
             {
                 child.Parent = null;
