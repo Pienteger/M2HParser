@@ -35,6 +35,9 @@ namespace Markdig.WebApp
             
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
+            services.AddCors(o =>
+                o.AddDefaultPolicy(b =>
+                    b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
@@ -48,7 +51,7 @@ namespace Markdig.WebApp
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

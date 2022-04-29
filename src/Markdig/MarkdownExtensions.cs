@@ -82,6 +82,7 @@ namespace Markdig
                 .UseCustomContainers()
                 .UseDefinitionLists()
                 .UseEmphasisExtras()
+                .UseEmojiAndSmiley()
                 .UseFigures()
                 .UseFooters()
                 .UseFootnotes()

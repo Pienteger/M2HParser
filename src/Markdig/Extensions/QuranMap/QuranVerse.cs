@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace Markdig.Extensions.QuranMap;
 
 [DebuggerDisplay("{VerseInfo}")]
-public class QuranVerse : LinkInline
+public class QuranVerse : ContainerInline
 {
     public QuranVerse()
     {
